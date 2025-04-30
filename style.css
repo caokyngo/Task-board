@@ -1,0 +1,329 @@
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background: #fff;
+  padding: 20px;
+  overflow-x: auto;
+}
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+
+h1 {
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+#filename {
+  padding: 6px 12px;
+  font-size: 14px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  height: 36px;
+  width: 220px;
+  background-color: white;
+}
+
+button {
+  padding: 6px 12px;
+  font-size: 14px;
+  height: 36px;
+  border-radius: 6px;
+  border: none;
+  background-color: #4CAF50;
+  color: white;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #45a049;
+}
+
+.icon-btn {
+  background: none;
+  border: none;
+  font-size: 20px;
+  padding: 4px;
+  cursor: pointer;
+}
+
+.icon-btn:hover {
+  transform: translateY(-2px);
+}
+
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+  overflow-x: auto;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.controls input, .controls select, .controls button {
+  padding: 6px 10px;
+  border-radius: 4px;
+}
+
+.controls input, .controls select {
+  border: 1px solid #ccc;
+}
+
+.controls button {
+  background: #4CAF50;
+  color: #fff;
+  border: none;
+}
+
+#board {
+  display: flex;
+  gap: 16px;
+  overflow-x: auto;
+  padding-top: 16px;
+}
+
+.column {
+  background: #f9f9f9;
+  border-radius: 6px;
+  padding: 8px;
+  min-width: 260px;
+  flex: 0 0 260px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
+  max-height: 90vh;
+}
+
+.column h2 {
+  font-size: 16px;
+  font-weight: bold;
+  margin: 0 0 8px;
+  text-align: center;
+}
+
+.card-container {
+  overflow-y: auto;
+  flex: 1;
+  padding: 4px;
+}
+
+.card {
+  background: #fff;
+  border-left: 5px solid #000;
+  border-radius: 4px;
+  padding: 8px 8px 32px;
+  margin-bottom: 8px;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+  position: relative;
+}
+
+.card h3 {
+  background: #000;
+  color: #fff;
+  font-size: 14px;
+  padding: 4px 6px;
+  margin: 0 0 4px;
+  border-radius: 2px;
+}
+
+.card p {
+  margin: 2px 0;
+  font-size: 13px;
+}
+
+.status-select {
+  position: absolute;
+  bottom: 4px;
+  right: 8px;
+  font-size: 12px;
+  padding: 4px 8px;
+  border-radius: 12px;
+  cursor: pointer;
+}
+
+/* Màu theo Status */
+.card.open, .card.next {
+  background: #fff;
+}
+
+/* Pastel yellow for assigned, in-progress, resolved cards */
+.card.assigned,
+.card.in-progress,
+.card.resolved {
+  background-color: #fff9c4; /* Vàng pastel */
+}
+
+.card.closed {
+  background: #d4edda;
+}
+
+.card.cancelled {
+  background: #f8d7da;
+}
+
+.card.re-open {
+  background: #ffe0b2;
+}
+
+.card.waiting-for-customer {
+  background: #cce5ff;
+}
+
+/* Popup */
+.popup {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.popup.show {
+  display: flex;
+}
+
+.popup-content {
+  background: white;
+  padding: 20px;
+  border-radius: 6px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  min-width: 300px;
+  text-align: center;
+}
+
+
+.popup-close {
+  background: none;
+  border: none;
+  color: #333;
+  text-decoration: underline;
+  cursor: pointer;
+  margin-top: 12px;
+}
+
+/* Report Count */
+#reportCount {
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+#reportCount a {
+  text-decoration: none;
+  margin: 0 4px;
+  color: black;
+}
+
+#reportCount a:hover {
+  text-decoration: underline;
+}
+/* Hiển thị Description với pre-wrap để giữ nguyên xuống dòng */
+#descriptionText {
+  white-space: pre-wrap;
+  word-break: break-word;
+  text-align: left; /* canh lề trái cho dễ đọc */
+  font-size: 14px;
+  line-height: 1.4;
+}
+/* Popup mô tả - đảm bảo button xuống dưới */
+
+.popup-content h3 {
+  margin: 0 0 12px;
+  text-align: center;
+}
+
+#descriptionText {
+  white-space: pre-wrap;
+  word-break: break-word;
+  text-align: left;
+  font-size: 14px;
+  line-height: 1.4;
+  margin-bottom: 16px; /* khoảng cách trước button */
+}
+
+.popup-close {
+  align-self: center;       /* canh giữa ngang */
+  padding: 8px 16px;
+  border-radius: 6px;
+  background: #4CAF50;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.popup-close:hover {
+  background: #45a049;
+}
+/* Giới hạn độ rộng popup */
+.popup-content {
+  max-width: 480px;     /* không rộng hơn 480px */
+  width: 90%;           /* hoặc rộng 90% khung viewport */
+  box-sizing: border-box;
+}
+
+/* Bắt buộc wrap text dài */
+#descriptionText {
+  white-space: pre-wrap;    /* giữ nguyên xuống dòng \n */
+  word-wrap: break-word;    /* ngắt từ khi quá dài */
+  overflow-wrap: break-word;
+}
+/* Đảm bảo chung chiều cao cho input, select và button trong .controls */
+.controls input,
+.controls select,
+.controls button {
+  height: 40px;            /* cùng chiều cao */
+  line-height: 1.2;        /* căn chỉnh text dọc */
+  box-sizing: border-box;  /* tính cả padding vào chiều cao */
+  padding: 0 12px;         /* giữ padding ngang */
+}
+
+/* Nếu muốn responsive hơn, có thể dùng đơn vị rem */
+.controls input,
+.controls select,
+.controls button {
+  height: 2.5rem;
+  padding: 0 0.75rem;
+}
+
+/* Đảm bảo các nút icon bên toolbar cũng đồng nhất */
+.icon-btn {
+  height: 40px;
+  width: 40px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+/* thêm vào cuối file style.css */
+
+.popup-content form .form-group {
+  margin-bottom: 12px;
+  text-align: left;
+}
+.popup-content form .form-group label {
+  display: block;
+  margin-bottom: 4px;
+  font-weight: bold;
+}
+.popup-content form .form-group input,
+.popup-content form .form-group textarea,
+.popup-content form .form-group select {
+  width: 100%;
+  padding: 6px 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+.popup-btn {
+  margin-right: 8px;
+}
+

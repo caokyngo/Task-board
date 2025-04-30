@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Report – Bugs by Status & Priority</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+      display: flex; justify-content: center;
+      margin: 0; padding: 20px; font-family: sans-serif;
+      background: #f5f5f5;
+    }
+    .container {
+      width: 90%; max-width: 800px;
+      background: #fff; border-radius: 6px;
+      padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+    h1 { margin: 0 0 20px; }
+    .controls { margin-bottom: 20px; }
+    .controls input, .controls button {
+      padding: 8px 12px; font-size: 1rem; margin: 0 8px;
+      border: 1px solid #ccc; border-radius: 4px;
+    }
+    .controls button {
+      background: #4CAF50; color: #fff; border: none; cursor: pointer;
+    }
+    .controls button#backBtn { background: #6c757d; }
+    .controls button:hover { background: #45a049; }
+    .controls button#backBtn:hover { background: #5a6268; }
+    canvas { max-width: 100%; margin-bottom: 20px; }
+    #summary p { margin: 8px 0; font-size: 0.95rem; }
+    #summary em { color: #666; font-style: normal; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Report – Bugs by Status & Priority</h1>
+    <div class="controls">
+      <input id="reportDate" placeholder="Chọn ngày" readonly>
+      <button id="generateBtn">Generate Chart</button>
+      <button id="backBtn">Quay lại</button>
+    </div>
+    <canvas id="bpChart" width="800" height="400"></canvas>
+    <div id="summary"><em>Chọn ngày hoặc bấm “Generate Chart” để xem báo cáo.</em></div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+  <script>
+    // Danh sách cố định
+    const STATUS_LIST = [
+      "open","in progress","resolved","closed",
+      "cancelled","re-open","waiting for customer","assigned"
+    ];
+    const BASE_PRIORITIES = ["immediately","high","medium","low","other"];
+
+    // Đọc mode từ URL: "day" hoặc "all"
+    const params = new URLSearchParams(window.location.search);
+    const mode = params.get("mode") || "day";
+
+    // Hiện/ẩn date picker tuỳ mode
+    if (mode === "all") {
+      document.addEventListener("DOMContentLoaded", () => {
+        document.getElementById("reportDate").style.display = "none";
+        document.getElementById("generateBtn").innerText = "Generate All";
+      });
+    }
+
+    flatpickr("#reportDate", { dateFormat: "Y-m-d" });
+
+    const ctx = document.getElementById("bpChart").getContext("2d");
+    let bpChart, counts, totalChart;
+
+    document.getElementById("generateBtn").addEventListener("click", () => {
+      // Lấy và lọc tasks
+      const tasks = JSON.parse(localStorage.getItem("taskData") || "[]");
+      let filtered = tasks;
+
+      if (mode === "day") {
+        const date = document.getElementById("reportDate").value;
+        if (!date) { alert("Vui lòng chọn ngày!"); return; }
+        filtered = tasks.filter(t => (t.Updated||"").startsWith(date));
+      }
+      // nếu mode==="all", giữ nguyên filtered = all tasks
+
+      // Khởi counts
+      counts = {};
+      STATUS_LIST.forEach(s => {
+        counts[s] = {};
+        BASE_PRIORITIES.forEach(p => counts[s][p] = 0);
+      });
+      totalChart = 0;
+      filtered.forEach(t => {
+        const st = t.Status;
+        let pr = (t.Priority||"").toLowerCase();
+        if (!BASE_PRIORITIES.slice(0,4).includes(pr)) pr = "other";
+        if (counts[st] && counts[st][pr] != null) {
+          counts[st][pr]++;
+          totalChart++;
+        }
+      });
+
+      // Tạo datasets stacked
+      const datasets = BASE_PRIORITIES.map((p,i) => ({
+        label: p.charAt(0).toUpperCase()+p.slice(1),
+        data: STATUS_LIST.map(s => counts[s][p]),
+        backgroundColor: `rgba(${50+30*i}, ${100+15*i}, ${200-20*i}, 0.5)`,
+        borderColor:       `rgba(${50+30*i}, ${100+15*i}, ${200-20*i}, 1)`,
+        borderWidth: 1, stack: 's1'
+      }));
+
+      // Xoá chart cũ
+      if (bpChart) bpChart.destroy();
+
+      // Vẽ chart
+      bpChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: STATUS_LIST.map(s => s.toUpperCase()),
+          datasets
+        },
+        options: {
+          plugins: {
+            title: {
+              display: true,
+              text: mode === "all"
+                ? "Bugs Across All Dates"
+                : `Bugs Updated on ${document.getElementById("reportDate").value}`
+            },
+            legend: { position: 'bottom' }
+          },
+          responsive: true,
+          scales: {
+            x: { stacked: true },
+            y: { stacked: true, beginAtZero: true, title: { display: true, text: 'Count' } }
+          },
+          onClick: (evt, elems) => {
+            if (!elems.length) return;
+            const idx = elems[0].index;
+            const status = STATUS_LIST[idx];
+            showSummaryForStatus(status);
+          }
+        }
+      });
+
+      // Hiển thị tổng
+      document.getElementById("summary").innerHTML =
+        `<p><strong>Tổng số bug đã xử lý ${
+          mode==="all" ? "trên tất cả các ngày" : "trong ngày"
+        }:</strong> ${totalChart}</p>
+        <em>Click vào cột để xem chi tiết từng status.</em>`;
+    });
+
+    document.getElementById("backBtn").addEventListener("click", () => {
+      window.location.href = "index.html";
+    });
+
+    function showSummaryForStatus(status) {
+      const summaryEl = document.getElementById("summary");
+      const parts = BASE_PRIORITIES
+        .filter(p => counts[status][p] > 0)
+        .map(p => `${counts[status][p]} ${p.charAt(0).toUpperCase()+p.slice(1)}`);
+      const totalStatus = parts.reduce((sum, part) => sum + parseInt(part), 0);
+      let html = summaryEl.innerHTML.split("</p>")[0] + `</p>`; 
+      html += `<p><strong>${status.toUpperCase()}:</strong> tổng ${totalStatus}` +
+              (parts.length ? `, trong đó ${parts.join(", ")}.` : `.`) +
+              `</p>`;
+      summaryEl.innerHTML = html;
+    }
+  </script>
+</body>
+</html>

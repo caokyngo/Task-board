@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Task-Board</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+</head>
+<body>
+
+  <div class="toolbar">
+    <h1>Task-Board</h1>
+    <button id="reportBtn" class="icon-btn" title="Report">📊</button>
+    <button id="exportBtn" class="icon-btn" title="Export">⬇️</button>
+    <button id="refreshBtn" class="icon-btn" title="Refresh">🔄</button>
+  </div>
+
+  <div class="controls">
+    <input type="text" id="filename" readonly placeholder="Tên file Excel đã chọn" />
+    <button id="uploadBtn">Chọn file</button>
+    <button id="viewBtn" disabled>Xem task to-do</button>
+
+    <select id="filterMode">
+      <option value="all">Tất cả</option>
+      <option value="date">Theo ngày</option>
+      <option value="id">Issue ID</option>
+      <option value="reporter">Reporter</option>
+      <option value="assignee">Assignee</option>
+    </select>
+    <input type="text" id="filterInput" placeholder="Từ khóa" style="display:none;" />
+    <input type="text" id="datePicker" placeholder="Chọn ngày tạo" readonly style="display:none;" />
+    <button id="filterBtn">Lọc</button>
+
+    <button id="addBtn">Thêm mới</button>
+
+    <div id="reportCount"></div>
+  </div>
+
+  <!-- Board -->
+  <div id="board" class="board"></div>
+
+  <!-- Popups -->
+
+  <!-- Add New Task Popup -->
+  <div id="addPopup" class="popup">
+    <div class="popup-content">
+      <h3>Thêm mới Task</h3>
+      <form id="addForm">
+        <div class="form-group">
+          <label for="newSummary">Summary</label>
+          <input type="text" id="newSummary" required />
+        </div>
+        <div class="form-group">
+          <label for="newAssignee">Assignee</label>
+          <input type="text" id="newAssignee" />
+        </div>
+        <div class="form-group">
+          <label for="newReporter">Reporter</label>
+          <input type="text" id="newReporter" />
+        </div>
+        <div class="form-group">
+          <label for="newPriority">Priority</label>
+          <select id="newPriority">
+            <option value="immediately">Immediately</option>
+            <option value="high">High</option>
+            <option value="medium">Medium</option>
+            <option value="low">Low</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="newModule">Module</label>
+          <input type="text" id="newModule" />
+        </div>
+        <div class="form-group">
+          <label for="newDescription">Description</label>
+          <textarea id="newDescription" rows="4"></textarea>
+        </div>
+        <button type="submit" class="popup-btn">Thêm</button>
+        <button type="button" class="popup-close" onclick="toggleAddPopup(false)">Hủy</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Description Popup -->
+  <div id="descriptionPopup" class="popup">
+    <div class="popup-content">
+      <h3>Mô tả chi tiết</h3>
+      <p id="descriptionText"></p>
+      <button class="popup-close" onclick="toggleDescriptionPopup(false)">Đóng</button>
+    </div>
+  </div>
+
+
+
+  <div id="confirmPopup" class="popup">
+    <div class="popup-content">
+      <p>Bạn có chắc chắn muốn xóa dữ liệu hiện tại không?</p>
+      <button id="confirmYes">Có</button>
+      <button id="confirmNo">Không</button>
+    </div>
+  </div>
+
+  <div id="exportPopup" class="popup">
+    <div class="popup-content">
+      <p>Bạn muốn xuất dữ liệu hiện tại sang file Excel?</p>
+      <button id="exportYes">Xuất Excel</button>
+      <button id="exportNo">Hủy</button>
+    </div>
+  </div>
+
+  <div id="reportPopup" class="popup">
+    <div class="popup-content">
+      <h3>Chọn loại report</h3>
+      <div class="popup-buttons">
+        <button class="popup-btn" data-mode="day">Theo ngày</button>
+        <button class="popup-btn" data-mode="all">Tất cả</button>
+      </div>
+      <button class="popup-close" onclick="document.getElementById('reportPopup').classList.remove('show')">Đóng</button>
+    </div>
+  </div>
+
+  <!-- Hidden File Input -->
+  <input type="file" id="fileInput" accept=".xlsx,.xls" hidden />
+
+  <script>
+    flatpickr("#datePicker", { dateFormat: "Y-m-d" });
+
+    document.getElementById("reportBtn").onclick = () => document.getElementById("reportPopup").classList.add("show");
+    document.getElementById("refreshBtn").onclick = () => document.getElementById("confirmPopup").classList.add("show");
+    document.getElementById("exportBtn").onclick = () => document.getElementById("exportPopup").classList.add("show");
+    document.getElementById("confirmNo").onclick = () => document.getElementById("confirmPopup").classList.remove("show");
+    document.getElementById("exportNo").onclick = () => document.getElementById("exportPopup").classList.remove("show");
+    document.getElementById("filterMode").onchange = () => {
+      const mode = document.getElementById("filterMode").value;
+      document.getElementById("datePicker").style.display = mode === "date" ? "inline-block" : "none";
+      document.getElementById("filterInput").style.display = mode !== "date" && mode !== "all" ? "inline-block" : "none";
+    };
+
+    function toggleDescriptionPopup(show) {
+      document.getElementById("descriptionPopup").classList.toggle("show", show);
+    }
+  </script>
+
+ <script type="module" src="script.js"></script>
+
+</body>
+</html>
