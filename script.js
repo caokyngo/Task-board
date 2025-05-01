@@ -348,3 +348,19 @@ function clearAllTasks() {
     .then(() => alert("Đã xóa toàn bộ task."))
     .catch(err => alert("Lỗi khi xóa: " + err.message));
 }
+// ======= Bảo vệ chọn file bằng đăng nhập =======
+document.getElementById("triggerFileBtn").addEventListener("click", () => {
+  document.getElementById("loginPopup").style.display = "block";
+});
+
+document.getElementById("loginConfirmBtn").addEventListener("click", () => {
+  const username = document.getElementById("loginUsername").value.trim();
+  const password = document.getElementById("loginPassword").value.trim();
+
+  if (username === "DiHDbiz" && password === "HDBank@1") {
+    document.getElementById("loginPopup").style.display = "none";
+    document.getElementById("secureFileInput").click();
+  } else {
+    alert("Sai tên đăng nhập hoặc mật khẩu!");
+  }
+});
