@@ -350,17 +350,26 @@ function clearAllTasks() {
 }
 // ======= Bảo vệ chọn file bằng đăng nhập =======
 document.getElementById("triggerFileBtn").addEventListener("click", () => {
-  document.getElementById("loginPopup").style.display = "block";
+    document.getElementById("loginPopup").style.display = "block";
 });
 
 document.getElementById("loginConfirmBtn").addEventListener("click", () => {
-  const username = document.getElementById("loginUsername").value.trim();
-  const password = document.getElementById("loginPassword").value.trim();
+    const username = document.getElementById("loginUsername").value.trim();
+    const password = document.getElementById("loginPassword").value.trim();
 
-  if (username === "DiHDbiz" && password === "HDBank@1") {
+    if (username === "DiHDbiz" && password === "HDBank@1") {
+        document.getElementById("loginPopup").style.display = "none";
+        document.getElementById("loginUsername").value = "";
+        document.getElementById("loginPassword").value = "";
+        document.getElementById("secureFileInput").click();
+
+    } else {
+        alert("Sai tên đăng nhập hoặc mật khẩu!");
+    }
+});
+// Nút đóng popup
+document.getElementById("closeLoginPopup").addEventListener("click", () => {
     document.getElementById("loginPopup").style.display = "none";
-    document.getElementById("secureFileInput").click();
-  } else {
-    alert("Sai tên đăng nhập hoặc mật khẩu!");
-  }
+    document.getElementById("loginUsername").value = "";
+    document.getElementById("loginPassword").value = "";
 });
