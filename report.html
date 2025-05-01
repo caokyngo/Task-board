@@ -13,26 +13,28 @@
     }
 
     body {
-      font-family: 'Segoe UI', sans-serif;
-      padding: 30px;
+      min-height: 100vh;
       margin: 0;
+      padding: 30px 16px;
       background: #fff;
+      font-family: 'Segoe UI', sans-serif;
       display: flex;
       flex-direction: column;
       align-items: center;
+      justify-content: flex-start;
     }
 
     h1 {
-      margin-bottom: 20px;
       font-size: 1.8rem;
+      margin-bottom: 20px;
     }
 
     .controls-row {
       display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 12px;
       flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      gap: 12px;
       margin-bottom: 30px;
       width: 100%;
       max-width: 900px;
@@ -42,8 +44,8 @@
       height: 40px;
       padding: 0 16px;
       font-size: 14px;
-      border: none;
       border-radius: 6px;
+      border: none;
       background-color: #4CAF50;
       color: white;
       cursor: pointer;
@@ -110,6 +112,10 @@
       box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
     }
 
+    .hidden {
+      display: none !important;
+    }
+
     @media (max-width: 600px) {
       .controls-row {
         flex-direction: column;
@@ -126,7 +132,6 @@
   <h1>Bug Report</h1>
 
   <div class="controls-row">
-
     <div class="date-picker-wrapper">
       <input type="text" id="reportDate" placeholder="Chọn ngày" />
       <span class="calendar-icon">📅</span>
@@ -135,7 +140,7 @@
     <button id="generateBtn" class="btn">Generate Chart</button>
 	<button id="backBtn" class="btn">🔙 Quay lại</button>
   </div>
- 
+
   <div id="chartContainer">
     <canvas id="statusChart"></canvas>
   </div>

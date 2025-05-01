@@ -1,6 +1,5 @@
-// report.js
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-database.js";
+import { getDatabase, ref, get, remove } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-database.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBmu-oRKGEgByq7fre6OYGv0mGkc-k4sB8",
@@ -53,12 +52,12 @@ backBtn.addEventListener("click", () => {
 generateBtn.addEventListener("click", () => generateChart("day"));
 
 if (mode === "all") {
-  dateInput.style.display = "none";
-  generateBtn.style.display = "none"; // ✅ Ẩn nút Generate Chart
+  dateInput.classList.add("hidden");
+  generateBtn.classList.add("hidden");
   generateChart("all");
 } else {
-  dateInput.style.display = "inline-block";
-  generateBtn.style.display = "inline-block";
+  dateInput.classList.remove("hidden");
+  generateBtn.classList.remove("hidden");
 }
 
 async function generateChart(mode) {
@@ -67,7 +66,7 @@ async function generateChart(mode) {
   const tasks = Object.values(data);
 
   if (mode === "all") {
-    const summary = {}; // summary[day][status][priority] = count
+    const summary = {};
 
     tasks.forEach(t => {
       const d = new Date(t.Updated);

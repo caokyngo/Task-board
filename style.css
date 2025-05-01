@@ -476,14 +476,6 @@ button:hover {
 .btn:hover {
   opacity: 0.9;
 }
-.controls-row {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 12px;
-  margin-top: 20px;
-  flex-wrap: wrap;
-}
 /* Responsive controls-row */
 .controls-row {
   display: flex;
@@ -492,7 +484,13 @@ button:hover {
   gap: 12px;
   margin: 20px 0;
   flex-wrap: wrap;
+  width: 100%;
+  max-width: 900px;
 }
+.hidden {
+  display: none !important;
+}
+
 
 /* Responsive input and buttons */
 .controls-row .btn,
@@ -528,10 +526,7 @@ canvas {
     text-align: center;
   }
 
-  .controls-row {
-    flex-direction: column;
-    gap: 8px;
-  }
+
 
   .controls-row .btn,
 
