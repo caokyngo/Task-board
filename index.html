@@ -3,7 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <title>Task-Board</title>
+  <link rel="icon" href="data:;base64,=" />
   <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
@@ -21,18 +23,6 @@
     <input type="text" id="filename" readonly placeholder="Tên file Excel đã chọn" />
     <button id="uploadBtn">Chọn file</button>
     <button id="viewBtn" disabled>Xem task to-do</button>
-
-    <select id="filterMode">
-      <option value="all">Tất cả</option>
-      <option value="date">Theo ngày</option>
-      <option value="id">Issue ID</option>
-      <option value="reporter">Reporter</option>
-      <option value="assignee">Assignee</option>
-    </select>
-    <input type="text" id="filterInput" placeholder="Từ khóa" style="display:none;" />
-    <input type="text" id="datePicker" placeholder="Chọn ngày tạo" readonly style="display:none;" />
-    <button id="filterBtn">Lọc</button>
-
     <button id="addBtn">Thêm mới</button>
 
     <div id="reportCount"></div>
@@ -54,11 +44,21 @@
         </div>
         <div class="form-group">
           <label for="newAssignee">Assignee</label>
-          <input type="text" id="newAssignee" />
+           <select id="newAssignee">
+            <option value="Trần Cẩm Tuyến">Trần Cẩm Tuyến</option>
+            <option value="Lê Hoàng Phương Anh">Lê Hoàng Phương Anh</option>
+            <option value="Ngô Lộc">Ngô Lộc</option>
+            <option value="Nguyễn Công Hiền">Nguyễn Công Hiền</option>
+          </select>
         </div>
         <div class="form-group">
           <label for="newReporter">Reporter</label>
-          <input type="text" id="newReporter" />
+          <select id="newReporter">
+            <option value="Phạm Quang Hùng">Phạm Quang Hùng</option>
+            <option value="Ngô Cao Kỳ">Ngô Cao Kỳ</option>
+            <option value="Trần Trọng Tín">Trần Trọng Tín</option>
+            <option value="Nguyễn Thị Anh Thơ">Nguyễn Thị Anh Thơ</option>
+          </select>
         </div>
         <div class="form-group">
           <label for="newPriority">Priority</label>
@@ -71,7 +71,48 @@
         </div>
         <div class="form-group">
           <label for="newModule">Module</label>
-          <input type="text" id="newModule" />
+         <select id="newModule">
+  <option value="">Chọn module</option>
+  <option value="37.01_Tổng hợp tiền gửi">37.01_Tổng hợp tiền gửi</option>
+  <option value="37.02_CK trong HDBank">37.02_CK trong HDBank</option>
+  <option value="37.03_GD chờ duyệt">37.03_GD chờ duyệt</option>
+  <option value="37.04_GD của tôi">37.04_GD của tôi</option>
+  <option value="37.05_Đăng nhập">37.05_Đăng nhập</option>
+  <option value="37.06_Đổi mật khẩu">37.06_Đổi mật khẩu</option>
+  <option value="37.07_SEMS_Đăng nhập">37.07_SEMS_Đăng nhập</option>
+  <option value="37.08_Quên tên đăng nhập">37.08_Quên tên đăng nhập</option>
+  <option value="37.09_Đăng nhập STH_PIN">37.09_Đăng nhập STH_PIN</option>
+  <option value="37.10_Gói dịch vụ">37.10_Gói dịch vụ</option>
+  <option value="37.11_SEMS_Cấp lại mật khẩu">37.11_SEMS_Cấp lại mật khẩu</option>
+  <option value="37.12_SEMS_Mở_Khóa TK người dùng">37.12_SEMS_Mở_Khóa TK người dùng</option>
+  <option value="37.13_SEMS_Batchjob">37.13_SEMS_Batchjob</option>
+  <option value="37.14_SEMS_Nhật ký GD">37.14_SEMS_Nhật ký GD</option>
+  <option value="37.15_SEMS_Duyệt GD BCT">37.15_SEMS_Duyệt GD BCT</option>
+  <option value="37.17_PTXT">37.17_PTXT</option>
+  <option value="37.18_Biến động số dư">37.18_Biến động số dư</option>
+  <option value="37.19_SEMS_Ma trận phân quyền SEMS">37.19_SEMS_Ma trận phân quyền SEMS</option>
+  <option value="37.20_SEMS_Ma trận phân quyền KHDN">37.20_SEMS_Ma trận phân quyền KHDN</option>
+  <option value="37.21_SEMS_Hợp đồng">37.21_SEMS_Hợp đồng</option>
+  <option value="37.22_SEMS_Phí ưu đãi theo AccType">37.22_SEMS_Phí ưu đãi theo AccType</option>
+  <option value="37.23_SEMS_Hạn mức theo GD">37.23_SEMS_Hạn mức theo GD</option>
+  <option value="37.24_SEMS_Hạn mức theo PTXT">37.24_SEMS_Hạn mức theo PTXT</option>
+  <option value="37.25_SEMS_QL mẫu Email">37.25_SEMS_QL mẫu Email</option>
+  <option value="37.26_SEMS_QL mẫu SMS">37.26_SEMS_QL mẫu SMS</option>
+  <option value="37.27_SEMS_QL mẫu biến động số dư">37.27_SEMS_QL mẫu biến động số dư</option>
+  <option value="37.28_SEMS_QL tin tức">37.28_SEMS_QL tin tức</option>
+  <option value="37.29_SEMS_Nhật ký hệ thống">37.29_SEMS_Nhật ký hệ thống</option>
+  <option value="37.30_SEMS_Phiên đăng nhập">37.30_SEMS_Phiên đăng nhập</option>
+  <option value="37.31_SEMS_DS tiền tệ">37.31_SEMS_DS tiền tệ</option>
+  <option value="37.32_SEMS_Báo cáo hệ thống">37.32_SEMS_Báo cáo hệ thống</option>
+  <option value="37.33_SEMS_Tham số hệ thống">37.33_SEMS_Tham số hệ thống</option>
+  <option value="37.34_Trang chủ">37.34_Trang chủ</option>
+  <option value="37.35_Đa ngôn ngữ">37.35_Đa ngôn ngữ</option>
+  <option value="37.36_SEMS_Gói phí">37.36_SEMS_Gói phí</option>
+  <option value="37.37_SEMS_Biểu phí">37.37_SEMS_Biểu phí</option>
+  <option value="PILOT_1.1">PILOT_1.1</option>
+  <option value="MIGARTION">MIGARTION</option>
+</select>
+
         </div>
         <div class="form-group">
           <label for="newDescription">Description</label>
@@ -82,23 +123,70 @@
       </form>
     </div>
   </div>
+<!-- Edit Task Popup -->
+<!-- Edit Task Popup (đặt trong index.html) -->
+<div id="editPopup" class="modal-overlay">
+  <div class="modal-card">
+    <header class="modal-header">
+      <h2>Chỉnh sửa Task</h2>
+      <button class="modal-close">&times;</button>
+    </header>
+    <form id="editForm" class="modal-body">
+      <div class="form-grid">
+        <label>
+          Issue Key
+          <input id="editIssueKey" readonly style="pointer-events: none; background-color: #eee;" />
+        </label>
+        <label>
+          Summary
+          <input type="text" id="editSummary" required>
+        </label>
+        <label>
+          Assignee
+          <input type="text" id="editAssignee">
+        </label>
+        <label>
+          Reporter
+          <input type="text" id="editReporter">
+        </label>
+        <label>
+          Priority
+          <select id="editPriority">
+            <option value="immediately">Immediately</option>
+            <option value="high">High</option>
+            <option value="medium">Medium</option>
+            <option value="low">Low</option>
+            <option value="other">Other</option>
+          </select>
+        </label>
+        <label class="full-width">
+          Module
+          <select id="editModule">
+            <!-- options -->
+          </select>
+        </label>
+        <label class="full-width">
+          Description
+          <textarea id="editDescription" rows="4"></textarea>
+        </label>
+      </div>
+      <footer class="modal-footer">
+        <button type="submit" class="btn btn-primary">Cập nhật</button>
+        <button type="button" id="editCancelBtn" class="btn btn-secondary">Hủy</button>
+      </footer>
+    </form>
+  </div>
+</div>
+
+
 
   <!-- Description Popup -->
   <div id="descriptionPopup" class="popup">
     <div class="popup-content">
       <h3>Mô tả chi tiết</h3>
       <p id="descriptionText"></p>
-      <button class="popup-close" onclick="toggleDescriptionPopup(false)">Đóng</button>
-    </div>
-  </div>
+      <button type="button" class="popup-close">Đóng</button>
 
-
-
-  <div id="confirmPopup" class="popup">
-    <div class="popup-content">
-      <p>Bạn có chắc chắn muốn xóa dữ liệu hiện tại không?</p>
-      <button id="confirmYes">Có</button>
-      <button id="confirmNo">Không</button>
     </div>
   </div>
 
@@ -132,11 +220,7 @@
     document.getElementById("exportBtn").onclick = () => document.getElementById("exportPopup").classList.add("show");
     document.getElementById("confirmNo").onclick = () => document.getElementById("confirmPopup").classList.remove("show");
     document.getElementById("exportNo").onclick = () => document.getElementById("exportPopup").classList.remove("show");
-    document.getElementById("filterMode").onchange = () => {
-      const mode = document.getElementById("filterMode").value;
-      document.getElementById("datePicker").style.display = mode === "date" ? "inline-block" : "none";
-      document.getElementById("filterInput").style.display = mode !== "date" && mode !== "all" ? "inline-block" : "none";
-    };
+   
 
     function toggleDescriptionPopup(show) {
       document.getElementById("descriptionPopup").classList.toggle("show", show);

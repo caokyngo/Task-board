@@ -326,4 +326,215 @@ button:hover {
 .popup-btn {
   margin-right: 8px;
 }
+/* Nút reportCount */
+#reportCount button {
+  margin: 2px;
+  padding: 6px 12px;
+  border: none;
+  background: #eee;
+  cursor: pointer;
+  border-radius: 4px;
+}
+#reportCount button.active { background: #ccc; }
+
+/* Danh sách task */
+#taskList ul { list-style: none; padding: 0; }
+#taskList li { padding: 4px 0; border-bottom: 1px solid #ddd; }
+
+.card-actions {
+  display: flex;            /* bật flexbox */
+  flex-direction: row;      /* xếp hàng ngang */
+  align-items: center;      /* căn giữa theo chiều dọc */
+  gap: 8px;                 /* khoảng cách đều giữa các phần tử */
+  margin-top: 8px;          /* nếu cần giữ khoảng cách so với nội dung trên */
+}
+
+.card-actions .status-select,
+.card-actions .btn-icon {
+  margin: 0;                /* gỡ mọi margin mặc định */
+}
+
+.card-actions .btn-icon {
+  flex-shrink: 0;           /* không cho nút co lại */
+}
+
+.btn-icon {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 1.2em;
+  line-height: 1;
+  padding: 2px;
+}
+
+.btn-icon:hover {
+  opacity: 0.7;
+}
+
+.edit-btn:hover { color: #28a745; }
+.delete-btn:hover { color: #dc3545; }
+/* style.css */
+
+/* Overlay nền mờ */
+.modal-overlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.5);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+/* Khi active */
+.modal-overlay.show {
+  display: flex;
+}
+
+/* Card popup */
+.modal-card {
+  background: #fff;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 600px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Header */
+.modal-header {
+  padding: 16px;
+  background: #f5f5f5;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.modal-header h2 {
+  margin: 0;
+  font-size: 1.25rem;
+}
+.modal-header .modal-close {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+/* Body */
+.modal-body {
+  padding: 16px;
+}
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 12px;
+}
+.form-grid .full-width {
+  grid-column: span 2;
+}
+.form-grid label {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.9rem;
+}
+.form-grid input,
+.form-grid select,
+.form-grid textarea {
+  margin-top: 4px;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 0.95rem;
+}
+
+/* Footer */
+.modal-footer {
+  padding: 16px;
+  background: #f5f5f5;
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+.btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.95rem;
+}
+.btn-primary {
+  background: #007bff;
+  color: #fff;
+}
+.btn-secondary {
+  background: #6c757d;
+  color: #fff;
+}
+.btn:hover {
+  opacity: 0.9;
+}
+.controls-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  margin-top: 20px;
+  flex-wrap: wrap;
+}
+/* Responsive controls-row */
+.controls-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  margin: 20px 0;
+  flex-wrap: wrap;
+}
+
+/* Responsive input and buttons */
+.controls-row .btn,
+.controls-row .date-picker-wrapper {
+  flex: 1 1 auto;
+  min-width: 160px;
+}
+
+/* Responsive canvas container */
+#chartContainer {
+  width: 100%;
+  max-width: 900px;
+  padding: 0 16px;
+  box-sizing: border-box;
+}
+
+/* Responsive canvas */
+canvas {
+  width: 100% !important;
+  height: auto !important;
+  max-height: 400px;
+}
+
+/* Small screen tweak */
+@media (max-width: 600px) {
+  .toolbar {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .toolbar h1 {
+    font-size: 1.25rem;
+    text-align: center;
+  }
+
+  .controls-row {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .controls-row .btn,
+
+}
+
 
