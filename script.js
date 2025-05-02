@@ -48,30 +48,32 @@ window.addEventListener("DOMContentLoaded", () => {
         addBtn.addEventListener("click", () => addPopup.classList.add("show"));
     if (addClose && addPopup)
         addClose.addEventListener("click", () => addPopup.classList.remove("show"));
-    if (addForm)
-        addForm.addEventListener("submit", e => {
-            e.preventDefault();
-            const now = new Date();
-            const key = `TBK-${now.getTime()}`;
-            const task = {
-                "Issue Key": key,
-                Status: "open",
-                "Create Date": now.toISOString().split('T')[0],
-                Updated: formatDateTime(now),
-                Assignee: document.getElementById("newAssignee").value.trim(),
-                Reporter: document.getElementById("newReporter").value.trim(),
-                Summary: document.getElementById("newSummary").value.trim(),
-                Priority: document.getElementById("newPriority").value,
-                Module: document.getElementById("newModule").value || "[No Module]",
-                Description: document.getElementById("newDescription").value.trim()
-            };
-            push(tasksRef, task);
-            addForm.reset();
-            addPopup.classList.remove("show");
-        });
+  if (addForm)
+    addForm.addEventListener("submit", e => {
+        e.preventDefault();
+        const now = new Date();
+        const mm = String(now.getMinutes()).padStart(2, '0');
+        const ss = String(now.getSeconds()).padStart(2, '0');
+        const key = `HDB_IBMB_2024_PM-${mm}${ss}`;
+        const task = {
+            "Issue Key": key,
+            Status: "open",
+            "Create Date": now.toISOString().split('T')[0],
+            Updated: formatDateTime(now),
+            Assignee: document.getElementById("newAssignee").value.trim(),
+            Reporter: document.getElementById("newReporter").value.trim(),
+            Summary: document.getElementById("newSummary").value.trim(),
+            Priority: document.getElementById("newPriority").value,
+            Module: document.getElementById("newModule").value || "[No Module]",
+            Description: document.getElementById("newDescription").value.trim()
+        };
+        push(tasksRef, task);
+        addForm.reset();
+        addPopup.classList.remove("show");
+    });
 
-    const fileInput = document.getElementById("fileInput");
-    const filenameInput = document.getElementById("filename");
+
+    
 
     const reportBtn = document.getElementById("reportBtn");
     const exportBtn = document.getElementById("exportBtn");
@@ -97,7 +99,7 @@ window.addEventListener("DOMContentLoaded", () => {
         refreshBtn.addEventListener("click", () => {
             // Đánh dấu hành động là clear DB
             refreshBtn.dataset.authAction = "clear";
-            document.getElementById("loginPopup").classList.remove("show");
+            document.getElementById("loginPopup").classList.add("show");
         });
     }
 
@@ -193,6 +195,7 @@ function formatDateTime(d) {
 //Function upload file
 function startExcelUpload() {
     const fileInput = document.getElementById("fileInput");
+    const filenameInput = document.getElementById("filename");
     if (!fileInput)
         return;
 
@@ -200,6 +203,7 @@ function startExcelUpload() {
         const file = e.target.files[0];
         if (!file)
             return alert("Chọn file Excel!");
+		if (filenameInput) filenameInput.value = file.name; // ✅ hiện tên file
 
         const reader = new FileReader();
         reader.onload = () => {
@@ -225,17 +229,49 @@ function startExcelUpload() {
                 raw: false
             });
 
-            json.forEach(r => {
-                r['Create Date'] = formatDateTime(new Date(r['Create Date'] || Date.now())).split(' ')[0];
-                r['Updated'] = formatDateTime(new Date(r['Updated'] || Date.now()));
-                let st = (r.Status || 'open').toString().trim().toLowerCase();
-                if (st === 'assignee')
-                    st = 'assigned';
-                r.Status = st;
-                push(tasksRef, r);
-            });
+            onValue(tasksRef, snap => {
+                const existingTasks = snap.val() || {};
+                const taskMap = {};
+                for (const [k, v] of Object.entries(existingTasks)) {
+                    taskMap[v['Issue Key']] = {
+                        key: k,
+                        data: v
+                    };
+                }
 
-            renderBoard(json);
+                json.forEach(row => {
+                    const issueKey = row['Issue Key'];
+                    if (!issueKey)
+                        return;
+
+                    const newUpdated = new Date(row['Updated']);
+                    const currentTask = taskMap[issueKey];
+                    if (currentTask) {
+                        const existingUpdated = new Date(currentTask.data['Updated']);
+                        if (!currentTask.data['Updated'] || (row['Updated'] && newUpdated > existingUpdated)) {
+                            // Ghi đè
+                            update(ref(db, `tasks/${currentTask.key}`), {
+                                ...row,
+                                Updated: formatDateTime(newUpdated),
+                                'Create Date': formatDateTime(new Date(row['Create Date'] || Date.now())).split(' ')[0]
+                            });
+                        }
+                    } else {
+                        // Không trùng -> thêm mới
+                        row['Create Date'] = formatDateTime(new Date(row['Create Date'] || Date.now())).split(' ')[0];
+                        row['Updated'] = formatDateTime(newUpdated);
+                        let st = (row.Status || 'open').toString().trim().toLowerCase();
+                        if (st === 'assignee')
+                            st = 'assigned';
+                        row.Status = st;
+                        push(tasksRef, row);
+                    }
+                });
+
+                alert("Xử lý file hoàn tất.");
+            }, {
+                onlyOnce: true
+            });
         };
 
         reader.readAsArrayBuffer(file);

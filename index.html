@@ -30,7 +30,7 @@
 
 <!-- File input ẩn -->
 	<input type="file" id="secureFileInput" style="display: none;" />
-    <button id="viewBtn" disabled>Xem task to-do</button>
+   <!--  <button id="viewBtn" disabled>Xem task to-do</button> -->
     <button id="addBtn">Thêm mới</button>
 
     <div id="reportCount"></div>
@@ -43,94 +43,94 @@
 
   <!-- Add New Task Popup -->
   <div id="addPopup" class="popup">
-    <div class="popup-content">
-      <h3>Thêm mới Task</h3>
-      <form id="addForm">
-        <div class="form-group">
-          <label for="newSummary">Summary</label>
-          <input type="text" id="newSummary" required />
-        </div>
-        <div class="form-group">
-          <label for="newAssignee">Assignee</label>
-           <select id="newAssignee">
-            <option value="Trần Cẩm Tuyến">Trần Cẩm Tuyến</option>
-            <option value="Lê Hoàng Phương Anh">Lê Hoàng Phương Anh</option>
-            <option value="Ngô Lộc">Ngô Lộc</option>
-            <option value="Nguyễn Công Hiền">Nguyễn Công Hiền</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label for="newReporter">Reporter</label>
-          <select id="newReporter">
-            <option value="Phạm Quang Hùng">Phạm Quang Hùng</option>
-            <option value="Ngô Cao Kỳ">Ngô Cao Kỳ</option>
-            <option value="Trần Trọng Tín">Trần Trọng Tín</option>
-            <option value="Nguyễn Thị Anh Thơ">Nguyễn Thị Anh Thơ</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label for="newPriority">Priority</label>
-          <select id="newPriority">
-            <option value="immediately">Immediately</option>
-            <option value="high">High</option>
-            <option value="medium">Medium</option>
-            <option value="low">Low</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label for="newModule">Module</label>
-         <select id="newModule">
-  <option value="">Chọn module</option>
-  <option value="37.01_Tổng hợp tiền gửi">37.01_Tổng hợp tiền gửi</option>
-  <option value="37.02_CK trong HDBank">37.02_CK trong HDBank</option>
-  <option value="37.03_GD chờ duyệt">37.03_GD chờ duyệt</option>
-  <option value="37.04_GD của tôi">37.04_GD của tôi</option>
-  <option value="37.05_Đăng nhập">37.05_Đăng nhập</option>
-  <option value="37.06_Đổi mật khẩu">37.06_Đổi mật khẩu</option>
-  <option value="37.07_SEMS_Đăng nhập">37.07_SEMS_Đăng nhập</option>
-  <option value="37.08_Quên tên đăng nhập">37.08_Quên tên đăng nhập</option>
-  <option value="37.09_Đăng nhập STH_PIN">37.09_Đăng nhập STH_PIN</option>
-  <option value="37.10_Gói dịch vụ">37.10_Gói dịch vụ</option>
-  <option value="37.11_SEMS_Cấp lại mật khẩu">37.11_SEMS_Cấp lại mật khẩu</option>
-  <option value="37.12_SEMS_Mở_Khóa TK người dùng">37.12_SEMS_Mở_Khóa TK người dùng</option>
-  <option value="37.13_SEMS_Batchjob">37.13_SEMS_Batchjob</option>
-  <option value="37.14_SEMS_Nhật ký GD">37.14_SEMS_Nhật ký GD</option>
-  <option value="37.15_SEMS_Duyệt GD BCT">37.15_SEMS_Duyệt GD BCT</option>
-  <option value="37.17_PTXT">37.17_PTXT</option>
-  <option value="37.18_Biến động số dư">37.18_Biến động số dư</option>
-  <option value="37.19_SEMS_Ma trận phân quyền SEMS">37.19_SEMS_Ma trận phân quyền SEMS</option>
-  <option value="37.20_SEMS_Ma trận phân quyền KHDN">37.20_SEMS_Ma trận phân quyền KHDN</option>
-  <option value="37.21_SEMS_Hợp đồng">37.21_SEMS_Hợp đồng</option>
-  <option value="37.22_SEMS_Phí ưu đãi theo AccType">37.22_SEMS_Phí ưu đãi theo AccType</option>
-  <option value="37.23_SEMS_Hạn mức theo GD">37.23_SEMS_Hạn mức theo GD</option>
-  <option value="37.24_SEMS_Hạn mức theo PTXT">37.24_SEMS_Hạn mức theo PTXT</option>
-  <option value="37.25_SEMS_QL mẫu Email">37.25_SEMS_QL mẫu Email</option>
-  <option value="37.26_SEMS_QL mẫu SMS">37.26_SEMS_QL mẫu SMS</option>
-  <option value="37.27_SEMS_QL mẫu biến động số dư">37.27_SEMS_QL mẫu biến động số dư</option>
-  <option value="37.28_SEMS_QL tin tức">37.28_SEMS_QL tin tức</option>
-  <option value="37.29_SEMS_Nhật ký hệ thống">37.29_SEMS_Nhật ký hệ thống</option>
-  <option value="37.30_SEMS_Phiên đăng nhập">37.30_SEMS_Phiên đăng nhập</option>
-  <option value="37.31_SEMS_DS tiền tệ">37.31_SEMS_DS tiền tệ</option>
-  <option value="37.32_SEMS_Báo cáo hệ thống">37.32_SEMS_Báo cáo hệ thống</option>
-  <option value="37.33_SEMS_Tham số hệ thống">37.33_SEMS_Tham số hệ thống</option>
-  <option value="37.34_Trang chủ">37.34_Trang chủ</option>
-  <option value="37.35_Đa ngôn ngữ">37.35_Đa ngôn ngữ</option>
-  <option value="37.36_SEMS_Gói phí">37.36_SEMS_Gói phí</option>
-  <option value="37.37_SEMS_Biểu phí">37.37_SEMS_Biểu phí</option>
-  <option value="PILOT_1.1">PILOT_1.1</option>
-  <option value="MIGARTION">MIGARTION</option>
-</select>
+  <div class="popup-content">
+    <h2>➕ Thêm mới Task</h2>
+    <form id="addForm" class="styled-form">
+      <div class="form-group">
+        <label>Summary</label>
+        <input type="text" id="newSummary" placeholder="Tóm tắt nội dung task" required />
+      </div>
 
+      <div class="form-row">
+        <div class="form-group">
+          <label>Assignee</label>
+          <input type="text" id="newAssignee" placeholder="Người được giao" />
         </div>
         <div class="form-group">
-          <label for="newDescription">Description</label>
-          <textarea id="newDescription" rows="4"></textarea>
+          <label>Reporter</label>
+          <input type="text" id="newReporter" placeholder="Người báo cáo" />
         </div>
-        <button type="submit" class="popup-btn">Thêm</button>
-        <button type="button" class="popup-close" onclick="toggleAddPopup(false)">Hủy</button>
-      </form>
-    </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Priority</label>
+          <select id="newPriority">
+            <option>High</option>
+            <option>Medium</option>
+            <option>Low</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Module</label>
+		  <select id="newModule">
+            <option value="">[No Module]</option>
+<option>37.01_Tổng hợp tiền gửi</option>
+<option>37.02_CK trong HDBank</option>
+<option>37.03_GD chờ duyệt</option>
+<option>37.04_GD của tôi</option>
+<option>37.05_Đăng nhập</option>
+<option>37.06_Đổi mật khẩu</option>
+<option>37.07_SEMS_Đăng nhập</option>
+<option>37.08_Quên tên đăng nhập</option>
+<option>37.09_Đăng nhập STH_PIN</option>
+<option>37.10_Gói dịch vụ</option>
+<option>37.11_SEMS_Cấp lại mật khẩu</option>
+<option>37.12_SEMS_Mở_Khóa TK người dùng</option>
+<option>37.13_SEMS_Batchjob</option>
+<option>37.14_SEMS_Nhật ký GD</option>
+<option>37.15_SEMS_Duyệt GD BCT</option>
+<option>37.17_PTXT</option>
+<option>37.18_Biến động số dư</option>
+<option>37.19_SEMS_Ma trận phân quyền SEMS</option>
+<option>37.20_SEMS_Ma trận phân quyền KHDN</option>
+<option>37.21_SEMS_Hợp đồng</option>
+<option>37.22_SEMS_Phí ưu đãi theo AccType</option>
+<option>37.23_SEMS_Hạn mức theo GD</option>
+<option>37.24_SEMS_Hạn mức theo PTXT</option>
+<option>37.25_SEMS_QL mẫu Email</option>
+<option>37.26_SEMS_QL mẫu SMS</option>
+<option>37.27_SEMS_QL mẫu biến động số dư</option>
+<option>37.28_SEMS_QL tin tức</option>
+<option>37.29_SEMS_Nhật ký hệ thống</option>
+<option>37.30_SEMS_Phiên đăng nhập</option>
+<option>37.31_SEMS_DS tiền tệ</option>
+<option>37.32_SEMS_Báo cáo hệ thống</option>
+<option>37.33_SEMS_Tham số hệ thống</option>
+<option>37.34_Trang chủ</option>
+<option>37.35_Đa ngôn ngữ</option>
+<option>37.36_SEMS_Gói phí</option>
+<option>37.37_SEMS_Biểu phí</option>
+<option>PILOT_1.1</option>
+<option>MIGARTION</option>
+
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Description</label>
+        <textarea id="newDescription" rows="4" placeholder="Mô tả chi tiết task"></textarea>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn primary">✔️ Tạo mới</button>
+        <button type="button" class="btn" onclick="toggleAddPopup(false)">❌ Hủy</button>
+      </div>
+    </form>
   </div>
+</div>
+
 
 <!-- Popup đăng nhập -->
 <div id="loginPopup" class="popup login-popup">
