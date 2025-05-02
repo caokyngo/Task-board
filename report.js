@@ -54,10 +54,12 @@ generateBtn.addEventListener("click", () => generateChart("day"));
 if (mode === "all") {
   dateInput.classList.add("hidden");
   generateBtn.classList.add("hidden");
+  generateTestcaseBtn.classList.add("hidden");
   generateChart("all");
 } else {
   dateInput.classList.remove("hidden");
   generateBtn.classList.remove("hidden");
+  generateTestcaseBtn.classList.remove("hidden");
 }
 
 async function generateChart(mode) {
@@ -210,3 +212,37 @@ async function generateChart(mode) {
 
   summaryContent.innerHTML = summaryHTML;
 }
+document.getElementById("generateTestcaseBtn").addEventListener("click", async () => {
+  const selectedDate = document.getElementById("reportDate").value;
+  if (!selectedDate) return alert("Vui lòng chọn ngày!");
+
+  const snap = await get(tasksRef);
+  const data = snap.val() || {};
+  const tasks = Object.values(data);
+
+  const filtered = tasks.filter(t => {
+    const d = new Date(t.Updated);
+    return d.toISOString().split("T")[0] === selectedDate;
+  });
+
+  const tbody = document.querySelector("#testcaseTable tbody");
+  tbody.innerHTML = "";
+
+  filtered.forEach(t => {
+    const row = document.createElement("tr");
+    row.innerHTML = `
+      <td>${t["Issue Key"]}</td>
+      <td>${t.Summary}</td>
+      <td>${t.Assignee}</td>
+      <td>${t.Reporter}</td>
+      <td>${t.Priority}</td>
+      <td>${t.Module}</td>
+      <td>${t.Updated}</td>
+    `;
+    tbody.appendChild(row);
+  });
+
+  document.getElementById("testcaseBox").style.display = "block";
+});
+
+

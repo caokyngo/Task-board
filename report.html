@@ -8,7 +8,7 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
   <style>
-    * {
+  * {
       box-sizing: border-box;
     }
 
@@ -126,6 +126,119 @@
         width: 100%;
       }
     }
+	#board {
+  display: flex;
+  gap: 16px;
+  overflow-x: auto;
+  padding-top: 16px;
+}
+
+.column {
+  background: #f9f9f9;
+  border-radius: 6px;
+  padding: 8px;
+  min-width: 260px;
+  flex: 0 0 260px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
+  max-height: 90vh;
+}
+
+.card-container {
+  overflow-y: auto;
+  flex: 1;
+  padding: 4px;
+}
+
+.card {
+  background: #fff;
+  border-left: 5px solid #000;
+  border-radius: 4px;
+  padding: 8px 8px 32px;
+  margin-bottom: 8px;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+  position: relative;
+}
+.board {
+  overflow-x: auto;
+  overflow-y: hidden;
+  white-space: nowrap;
+  scroll-behavior: smooth;
+}
+ #testcaseBox {
+  margin-top: 20px;
+  display: none;
+  overflow: auto;
+  max-height: 70vh;       /* ⬅ chiều cao tối đa */
+}
+
+.board-container {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 20px;
+  overflow-x: auto;       /* ⬅ scroll ngang nếu không đủ */
+  overflow-y: hidden;
+  padding: 10px;
+  min-height: 100px;
+}
+
+.testcase-column {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.testcase-column h4 {
+  position: sticky;
+  top: 0;
+  background: #f9f9f9;
+  padding: 8px;
+  margin: 0;
+  border-bottom: 1px solid #ccc;
+  z-index: 1;
+}
+
+.testcase-card {
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  padding: 8px;
+  margin-bottom: 10px;
+  font-size: 14px;
+  word-break: break-word;
+  box-shadow: 1px 1px 4px rgba(0,0,0,0.05);
+   word-break: break-word;
+  white-space: normal;
+}
+.card-container {
+  flex: 1;
+  overflow-y: auto;
+  padding: 4px;
+}
+#testcaseTable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  margin-top: 10px;
+}
+
+#testcaseTable th,
+#testcaseTable td {
+  border: 1px solid #ccc;
+  padding: 8px;
+  text-align: left;
+  vertical-align: top;
+  word-break: break-word;
+}
+
+#testcaseTable thead {
+  background: #f0f0f0;
+  position: sticky;
+  top: 0;
+}
+
   </style>
 </head>
 <body>
@@ -138,18 +251,35 @@
     </div>
 
     <button id="generateBtn" class="btn">Generate Chart</button>
+	 <button id="generateTestcaseBtn" class="btn">Generate Testcase</button>
 	<button id="backBtn" class="btn">🔙 Quay lại</button>
   </div>
 
   <div id="chartContainer">
     <canvas id="statusChart"></canvas>
   </div>
-
-  <div id="summaryBox">
+   <div id="summaryBox">
     <h3>Tổng hợp Priority theo Status</h3>
     <div id="summaryContent"></div>
   </div>
-
+  <!-- Khu vực hiển thị testcase -->
+<div id="testcaseBox" style="margin-top: 20px; display: none;">
+  <h3>Danh sách Testcase theo Ngày</h3>
+  <table id="testcaseTable">
+    <thead>
+      <tr>
+        <th>Issue Key</th>
+        <th>Summary</th>
+        <th>Assignee</th>
+        <th>Reporter</th>
+        <th>Priority</th>
+        <th>Module</th>
+        <th>Updated</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+</div>
   <script type="module" src="report.js"></script>
 </body>
 </html>
