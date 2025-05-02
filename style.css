@@ -526,10 +526,160 @@ canvas {
     text-align: center;
   }
 
-
-
   .controls-row .btn,
 
 }
+.login-popup .popup-content {
+  max-width: 360px;
+  padding: 24px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.form-group {
+  margin-bottom: 16px;
+}
+
+.input-wrapper {
+  position: relative;
+}
+
+.input-wrapper input {
+  width: 100%;
+  padding-right: 36px;
+  box-sizing: border-box;
+}
+
+
+
+.popup-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.btn {
+  padding: 8px 16px;
+  font-weight: bold;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.btn.primary {
+  background-color: #007bff;
+  color: white;
+}
+.input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-wrapper input {
+  width: 100%;
+  padding-right: 36px; /* chừa chỗ cho icon */
+  box-sizing: border-box;
+}
+
+
+.login-popup .form-group {
+  margin-bottom: 16px;
+}
+
+.login-popup label {
+  font-weight: 600;
+  display: block;
+  margin-bottom: 6px;
+}
+
+.login-popup input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+.login-popup .popup-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.login-popup .btn {
+  padding: 8px 16px;
+  font-weight: bold;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.login-popup .btn.primary {
+  background-color: #007bff;
+  color: white;
+}
+
+.login-popup .btn:hover {
+  opacity: 0.9;
+}
+
+@keyframes popupFade {
+  from {
+    transform: scale(0.95);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+.login-popup .popup-content {
+  max-width: 360px;
+  padding: 24px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  animation: popupFade 0.3s ease;
+}
+.form-group {
+  text-align: left; /* 👈 canh trái toàn bộ */
+}
+
+.login-popup label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 600;
+  text-align: left; /* 👈 canh trái label */
+}
+#loginPopup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;      /* ✅ Canh giữa theo chiều dọc */
+  justify-content: center;  /* ✅ Canh giữa theo chiều ngang */
+  z-index: 999;
+  display: none;
+}
+
+#loginPopup.show {
+  display: flex;
+}
+.icon-eyes {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #888;
+  cursor: pointer;
+}
+
+
 
 

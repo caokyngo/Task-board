@@ -7,16 +7,20 @@
   <link rel="stylesheet" href="style.css">
   <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <script src="https://cdn.sheetjs.com/xlsx-latest/package/xlsx.mini.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
 </head>
+
 <body>
 
   <div class="toolbar">
     <h1>Task-Board</h1>
     <button id="reportBtn" class="icon-btn" title="Report">📊</button>
     <button id="exportBtn" class="icon-btn" title="Export">⬇️</button>
-    <button id="refreshBtn" class="icon-btn" title="Refresh">🔄</button>
+    <button id="refreshBtn" class="icon-btn" title="Refresh" data-action="clear">🔄</button>
   </div>
 
   <div class="controls">
@@ -128,23 +132,35 @@
     </div>
   </div>
 
-
 <!-- Popup đăng nhập -->
-<div id="loginPopup" style="display: none; position: fixed; top: 50%; left: 50%;
-  transform: translate(-50%, -50%); background: white; border: 1px solid #ccc;
-  padding: 20px; z-index: 10000; box-shadow: 0 0 12px rgba(0,0,0,0.2); border-radius: 8px; min-width: 300px;">
-  
-  <!-- Nút đóng -->
-  <span id="closeLoginPopup" style="position: absolute; top: 8px; right: 12px;
-    font-weight: bold; font-size: 18px; cursor: pointer;">✖</span>
+<div id="loginPopup" class="popup login-popup">
+  <div class="popup-content">
+    <h2>🔐 Xác thực hành động</h2>
+    <p>Vui lòng nhập thông tin để tiếp tục</p>
 
-  <h3>Đăng nhập để chọn file</h3>
-  <input type="text" id="loginUsername" placeholder="Username"
-         style="width: 100%; margin-bottom: 10px; padding: 8px;" />
-  <input type="password" id="loginPassword" placeholder="Password"
-         style="width: 100%; margin-bottom: 12px; padding: 8px;" />
-  <button id="loginConfirmBtn" class="btn">Đăng nhập</button>
+    <div class="form-group">
+      <label for="loginUsername">Tên đăng nhập</label>
+	   <div class="input-wrapper">
+      <input type="text" id="loginUsername" placeholder="Nhập tên đăng nhập" />
+	  </div>
+    </div>
+
+    <div class="form-group">
+      <label for="loginPassword">Mật khẩu</label>
+      <div class="input-wrapper">
+  <input type="password" id="loginPassword" placeholder="Nhập mật khẩu" />
+  <i id="togglePassword" class="fas fa-eye icon-eyes"></i> 
 </div>
+    </div>
+
+    <div class="popup-actions">
+      <button id="loginConfirmBtn" class="btn primary">✅ Xác nhận</button>
+      <button id="closeLoginPopup" class="btn">❌ Đóng</button>
+    </div>
+  </div>
+</div>
+
+
 
 
 <!-- Edit Task Popup (đặt trong index.html) -->
@@ -235,22 +251,6 @@
   <!-- Hidden File Input -->
   <input type="file" id="fileInput" accept=".xlsx,.xls" hidden />
 
-  <script>
-    flatpickr("#datePicker", { dateFormat: "Y-m-d" });
-
-    document.getElementById("reportBtn").onclick = () => document.getElementById("reportPopup").classList.add("show");
-    document.getElementById("refreshBtn").onclick = () => document.getElementById("confirmPopup").classList.add("show");
-    document.getElementById("exportBtn").onclick = () => document.getElementById("exportPopup").classList.add("show");
-    document.getElementById("confirmNo").onclick = () => document.getElementById("confirmPopup").classList.remove("show");
-    document.getElementById("exportNo").onclick = () => document.getElementById("exportPopup").classList.remove("show");
-   
-
-    function toggleDescriptionPopup(show) {
-      document.getElementById("descriptionPopup").classList.toggle("show", show);
-    }
-  </script>
-
  <script type="module" src="script.js"></script>
-
 </body>
 </html>

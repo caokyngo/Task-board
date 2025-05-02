@@ -2,6 +2,7 @@
 // Load as module
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
 import { getDatabase, ref, onValue, push, update, remove } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-database.js";
+import { getStorage, ref as storageRef, uploadBytes } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-storage.js";
 
 // Global helper for inline add popup toggle
 window.toggleAddPopup = show => {
@@ -37,7 +38,7 @@ const urlParams = new URLSearchParams(window.location.search);
 const statusFilter = urlParams.get('status');
 
 // --- DOM bindings after load ---
-document.addEventListener("DOMContentLoaded", () => {
+window.addEventListener("DOMContentLoaded", () => {
     // Add Task popup
     const addBtn = document.getElementById("addBtn");
     const addPopup = document.getElementById("addPopup");
@@ -69,88 +70,55 @@ document.addEventListener("DOMContentLoaded", () => {
             addPopup.classList.remove("show");
         });
 
-    // Upload Excel functionality
-    const uploadBtn = document.getElementById("uploadBtn");
     const fileInput = document.getElementById("fileInput");
     const filenameInput = document.getElementById("filename");
-    if (uploadBtn && fileInput) {
-        uploadBtn.addEventListener("click", () => fileInput.click());
-    }
-    if (fileInput) {
-        fileInput.addEventListener("change", e => {
-            const file = e.target.files[0];
-            if (!file)
-                return alert("Chọn file Excel!");
-            filenameInput.value = file.name;
-            const reader = new FileReader();
-            reader.onload = () => {
-                const data = new Uint8Array(reader.result);
-                const wb = XLSX.read(data, {
-                    type: 'array'
-                });
-                const sheet = wb.Sheets[wb.SheetNames[0]];
-                const rows = XLSX.utils.sheet_to_json(sheet, {
-                    header: 1,
-                    defval: ''
-                });
-                const hi = rows.findIndex(r => r.includes('Issue Key'));
-                if (hi < 0)
-                    return alert("Không tìm thấy cột 'Issue Key'");
-                const headers = rows[hi].map(h => h.toString().trim());
-                const json = XLSX.utils.sheet_to_json(sheet, {
-                    header: headers,
-                    range: hi + 1,
-                    defval: '',
-                    raw: false
-                });
-                json.forEach(r => {
-                    r['Create Date'] = formatDateTime(new Date(r['Create Date'] || Date.now())).split(' ')[0];
-                    r['Updated'] = formatDateTime(new Date(r['Updated'] || Date.now()));
-                    let st = (r.Status || 'open').toString().trim().toLowerCase();
-                    if (st === 'assignee')
-                        st = 'assigned';
-                    r.Status = st;
-                    push(tasksRef, r);
-                });
-            };
-            reader.readAsArrayBuffer(file);
-        });
-    }
 
-    // --- Report Popup handlers ---
     const reportBtn = document.getElementById("reportBtn");
-    const reportPopup = document.getElementById("reportPopup");
-    const reportClose = reportPopup && reportPopup.querySelector(".popup-close");
-    const reportDateInp = document.getElementById("reportDate");
-    const dayBtn = reportPopup && reportPopup.querySelector(".popup-btn[data-mode='day']");
-    const allBtn = reportPopup && reportPopup.querySelector(".popup-btn[data-mode='all']");
-
-    if (reportBtn && reportPopup) {
-        reportBtn.addEventListener("click", () => reportPopup.classList.add("show"));
-    }
-    if (reportClose && reportPopup) {
-        reportClose.addEventListener("click", () => reportPopup.classList.remove("show"));
-    }
-    if (dayBtn) {
-        dayBtn.addEventListener("click", () => {
-            reportPopup.classList.remove("show");
-            window.location.href = `report.html?mode=day`;
-        });
-    };
-    if (allBtn) {
-        allBtn.addEventListener("click", () => {
-            reportPopup.classList.remove("show");
-            // Redirect to report page with mode=all
-            window.location.href = `report.html?mode=all`;
-        });
-    }
+    const exportBtn = document.getElementById("exportBtn");
     const refreshBtn = document.getElementById("refreshBtn");
+    const reportPopup = document.getElementById("reportPopup");
+    const exportPopup = document.getElementById("exportPopup");
+
+    if (reportBtn) {
+        reportBtn.addEventListener("click", () => {
+            reportPopup.classList.toggle("show");
+            exportPopup.classList.remove("show");
+        });
+    }
+
+    if (exportBtn) {
+        exportBtn.addEventListener("click", () => {
+            exportPopup.classList.toggle("show");
+            reportPopup.classList.remove("show");
+        });
+    }
+
     if (refreshBtn) {
         refreshBtn.addEventListener("click", () => {
-            const confirmed = confirm("Tất cả dữ liệu hiện tại ở database sẽ bị xóa. Bạn có chắc không?");
-            if (confirmed)
-                clearAllTasks();
+            // Đánh dấu hành động là clear DB
+            refreshBtn.dataset.authAction = "clear";
+            document.getElementById("loginPopup").classList.remove("show");
         });
+    }
+
+    // ✅ Sửa ở đây: sự kiện cho các nút trong reportPopup
+    if (reportPopup) {
+        const dayBtn = reportPopup.querySelector(".popup-btn[data-mode='day']");
+        const allBtn = reportPopup.querySelector(".popup-btn[data-mode='all']");
+
+        if (dayBtn) {
+            dayBtn.addEventListener("click", () => {
+                reportPopup.classList.remove("show");
+                window.open("report.html?mode=day", "_self");
+            });
+        }
+
+        if (allBtn) {
+            allBtn.addEventListener("click", () => {
+                reportPopup.classList.remove("show");
+                window.open("report.html?mode=all", "_self");
+            });
+        }
     }
 
     // Edit Task popup
@@ -179,7 +147,18 @@ document.addEventListener("DOMContentLoaded", () => {
             editForm.reset();
             editPopup.classList.remove("show");
         });
+    //xử lý toggle eye
+    const toggleIcon = document.getElementById("togglePassword");
+    const pwInput = document.getElementById("loginPassword");
 
+    if (toggleIcon && pwInput) {
+        toggleIcon.addEventListener("click", () => {
+            const isHidden = pwInput.type === "password";
+            pwInput.type = isHidden ? "text" : "password";
+            toggleIcon.classList.toggle("fa-eye", !isHidden);
+            toggleIcon.classList.toggle("fa-eye-slash", isHidden);
+        });
+    }
     // Description popup close
     const descPopup = document.getElementById("descriptionPopup");
     const descClose = descPopup && descPopup.querySelector(".popup-close");
@@ -210,6 +189,59 @@ function formatDateTime(d) {
     m = String(d.getMinutes()).padStart(2, '0'),
     s = String(d.getSeconds()).padStart(2, '0');
     return `${Y}-${M}-${D} ${h}:${m}:${s}`;
+}
+//Function upload file
+function startExcelUpload() {
+    const fileInput = document.getElementById("fileInput");
+    if (!fileInput)
+        return;
+
+    fileInput.onchange = (e) => {
+        const file = e.target.files[0];
+        if (!file)
+            return alert("Chọn file Excel!");
+
+        const reader = new FileReader();
+        reader.onload = () => {
+            const data = new Uint8Array(reader.result);
+            const wb = XLSX.read(data, {
+                type: 'array'
+            });
+            const sheet = wb.Sheets[wb.SheetNames[0]];
+            const rows = XLSX.utils.sheet_to_json(sheet, {
+                header: 1,
+                defval: ''
+            });
+
+            const hi = rows.findIndex(r => r.includes('Issue Key'));
+            if (hi < 0)
+                return alert("Không tìm thấy cột 'Issue Key'");
+
+            const headers = rows[hi].map(h => h.toString().trim());
+            const json = XLSX.utils.sheet_to_json(sheet, {
+                header: headers,
+                range: hi + 1,
+                defval: '',
+                raw: false
+            });
+
+            json.forEach(r => {
+                r['Create Date'] = formatDateTime(new Date(r['Create Date'] || Date.now())).split(' ')[0];
+                r['Updated'] = formatDateTime(new Date(r['Updated'] || Date.now()));
+                let st = (r.Status || 'open').toString().trim().toLowerCase();
+                if (st === 'assignee')
+                    st = 'assigned';
+                r.Status = st;
+                push(tasksRef, r);
+            });
+
+            renderBoard(json);
+        };
+
+        reader.readAsArrayBuffer(file);
+    };
+
+    fileInput.click(); // ✅ mở cửa sổ chọn file
 }
 
 // --- Render board ---
@@ -246,6 +278,7 @@ function renderBoard(data) {
                     Updated: formatDateTime(new Date())
                 }));
             actions.appendChild(sel);
+
             // Edit
             const editBtn = document.createElement("button");
             editBtn.className = "btn-icon edit-btn";
@@ -341,6 +374,13 @@ document.getElementById("exportYes").addEventListener("click", () => {
 
     document.getElementById("exportPopup").classList.remove("show");
 });
+const exportNoBtn = document.getElementById("exportNo");
+if (exportNoBtn) {
+    exportNoBtn.addEventListener("click", () => {
+        document.getElementById("exportPopup").classList.remove("show");
+    });
+}
+
 function clearAllTasks() {
     if (!confirm("Xác nhận xóa tất cả dữ liệu?"))
         return;
@@ -350,7 +390,7 @@ function clearAllTasks() {
 }
 // ======= Bảo vệ chọn file bằng đăng nhập =======
 document.getElementById("triggerFileBtn").addEventListener("click", () => {
-    document.getElementById("loginPopup").style.display = "block";
+    document.getElementById("loginPopup").classList.add("show");
 });
 
 document.getElementById("loginConfirmBtn").addEventListener("click", () => {
@@ -358,18 +398,30 @@ document.getElementById("loginConfirmBtn").addEventListener("click", () => {
     const password = document.getElementById("loginPassword").value.trim();
 
     if (username === "DiHDbiz" && password === "HDBank@1") {
-        document.getElementById("loginPopup").style.display = "none";
+        document.getElementById("loginPopup").classList.remove("show");
         document.getElementById("loginUsername").value = "";
         document.getElementById("loginPassword").value = "";
-        document.getElementById("secureFileInput").click();
-
+        // Kiểm tra action từ button
+        const action = document.querySelector("[data-auth-action]");
+        if (action && action.dataset.authAction === "clear") {
+            delete action.dataset.authAction; // reset
+            clearAllTasks(); // ✅ Xóa dữ liệu nếu là yêu cầu từ Refresh
+        } else {
+            startExcelUpload(); // ✅ Mặc định là chọn file
+        }
     } else {
         alert("Sai tên đăng nhập hoặc mật khẩu!");
     }
 });
+//bắt sự kiện nhấm phím enter
+document.getElementById("loginPassword").addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+        document.getElementById("loginConfirmBtn").click();
+    }
+});
 // Nút đóng popup
 document.getElementById("closeLoginPopup").addEventListener("click", () => {
-    document.getElementById("loginPopup").style.display = "none";
+    document.getElementById("loginPopup").classList.remove("show");
     document.getElementById("loginUsername").value = "";
     document.getElementById("loginPassword").value = "";
 });
